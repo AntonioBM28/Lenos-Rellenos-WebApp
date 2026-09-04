@@ -1,0 +1,22 @@
+# CODEOWNERS - Leños Rellenos WebApp
+#
+# Este archivo define quién debe revisar y aprobar los cambios según el
+# módulo afectado, alineado a la arquitectura real del proyecto
+# (Frontend / Backend / Panel de Administración).
+#
+# IMPORTANTE: Reemplaza "@AntonioBM28" por el usuario correspondiente en
+# cada línea si en algún momento se suman más colaboradores por rol
+# (por ejemplo, un integrante encargado solo del backend).
+
+# Frontend: catálogo, carrito, integración con WhatsApp
+/frontend/                     @AntonioBM28
+
+# Panel de Administración (dashboard del dueño del negocio)
+/frontend/pages/admin.html     @AntonioBM28
+
+# Backend: API REST, modelos y lógica de negocio
+/backend/                      @AntonioBM28
+
+# Configuración crítica del repositorio
+/README.md                     @AntonioBM28
+/.github/                      @AntonioBM28
