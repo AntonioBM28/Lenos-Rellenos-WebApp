@@ -11,10 +11,5 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@commitlint/cli": "^21.2.2",
-    "@commitlint/config-conventional": "^21.2.2",
-    "eslint": "^10.9.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.4.1"
   }
 }
