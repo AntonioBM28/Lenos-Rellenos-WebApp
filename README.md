@@ -38,6 +38,35 @@ Se seleccionó **GitHub** como plataforma de alojamiento del repositorio, consid
 
 ---
 
+## 🔀 Flujo de Trabajo del Control de Versiones
+
+### Ritmo de entregas: MVP incremental
+
+El desarrollo sigue un ritmo de **entregas incrementales tipo MVP**, alineado a las fases naturales del negocio identificadas en el caso: **Catálogo → Carrito → Integración WhatsApp → Panel de Administración**. Cada fase es funcional por sí sola y se integra sobre la anterior, permitiendo validar con el dueño del negocio (el "cliente" real de este proyecto) que cada bloque resuelve su necesidad antes de avanzar al siguiente, en lugar de entregar todo el sistema de golpe al final.
+
+### Comparación de flujos de trabajo
+
+| Flujo | Características | ¿Aplica a este caso? |
+|---|---|---|
+| **Git Flow** | Ramas `main`, `develop` y `feature/*` por funcionalidad; `main` solo recibe código ya probado en `develop`. Da control fino sobre qué se libera y cuándo. | ✅ **Elegido.** Encaja con el ritmo de entregas por fases (cada fase del MVP = una o más ramas `feature/*`) y permite mantener `main` siempre estable mientras se integra trabajo en `develop`. |
+| **GitHub Flow** | Solo `main` + ramas `feature/*` que se mergean directo a `main` vía PR. Pensado para despliegue continuo. | ❌ Descartado. Es más simple, pero no da un espacio de integración intermedio antes de tocar `main` — riesgoso considerando que el panel de administración maneja datos de pedidos y clientes. |
+| **Trunk-Based Development** | Todos commitean directo (o casi) sobre una única rama principal, con feature flags para ocultar trabajo incompleto. | ❌ Descartado. Requiere disciplina y tooling (feature flags, CI robusto) que no se justifica para un proyecto de una sola persona con recursos limitados; el riesgo de romper `main` es mayor. |
+
+### Estrategia de ramas y protección diferenciada
+
+```
+main        → producción. Protegida: PR + aprobación + status checks + CODEOWNERS.
+  └─ develop  → integración de las fases del MVP. Protegida: PR requerido (sin aprobación obligatoria de un tercero, dado que el equipo es de un solo desarrollador).
+       ├─ feature/catalogo       (RF1, RF5, RF6, RF7)
+       ├─ feature/carrito        (RF2, RNF4)
+       ├─ feature/whatsapp       (RF3, RF4)
+       └─ feature/panel-admin    (gestión de productos y pedidos — datos sensibles)
+```
+
+La protección es **diferenciada según criticidad del módulo**: `feature/panel-admin` requiere que su PR hacia `develop` se revise con más detalle porque expone datos de pedidos y clientes, mientras que `feature/catalogo` (puramente visual) tiene un flujo de revisión más ligero.
+
+---
+
 ## 🏗️ Arquitectura del Proyecto
 
 El repositorio sigue una **arquitectura de 3 capas**, tal como lo define el caso de estudio:
