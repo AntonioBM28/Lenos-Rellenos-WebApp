@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leños Rellenos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>🔥 Leños Rellenos</h1>
+    <p>Sabor a la Leña — Tradición en cada bocado</p>
+    <!-- RF6: Horario del negocio -->
+    <p id="estado-horario" class="estado-horario">Consultando horario...</p>
+  </header>
+
+  <main>
+    <!-- RF1: Visualización de productos (RF5: solo se listan los disponibles, filtrado desde el backend) -->
+    <section class="carrusel-productos" id="catalogo" aria-label="Catálogo de productos">
+      <p id="catalogo-cargando">Cargando productos...</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Leños Rellenos — Hecho con tradición familiar.</p>
+  </footer>
+
+  <script src="js/disponibilidad.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/whatsapp.js"></script>
+</body>
+</html>
