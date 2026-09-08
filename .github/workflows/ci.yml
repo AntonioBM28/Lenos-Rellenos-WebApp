@@ -1,0 +1,32 @@
+name: CI
+
+# Se ejecuta en cada Pull Request hacia main o develop, y en cada push a esas
+# ramas. Este es el "status check" que exige el instrumento: a diferencia de
+# Husky (que corre en la máquina local antes del commit), esto corre en los
+# servidores de GitHub sobre el propio Pull Request, y puede bloquear el
+# merge si falla — sin importar si alguien olvidó correr los hooks locales.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: ESLint (calidad de código)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Ejecutar ESLint sobre frontend y backend
+        run: npx eslint frontend/js backend/src --ext .js
