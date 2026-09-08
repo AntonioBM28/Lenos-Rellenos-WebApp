@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leños Rellenos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <h1>🔥 Leños Rellenos</h1>
+      <!-- RF2: acceso al carrito -->
+      <button id="btn-abrir-carrito" class="btn-carrito" aria-label="Ver carrito">
+        🛒 <span id="carrito-contador">0</span>
+      </button>
+    </div>
+    <p>Sabor a la Leña — Tradición en cada bocado</p>
+    <!-- RF6: Horario del negocio -->
+    <p id="estado-horario" class="estado-horario">Consultando horario...</p>
+  </header>
+
+  <main>
+    <!-- RF1: Visualización de productos (RF5: solo se listan los disponibles, filtrado desde el backend) -->
+    <section class="carrusel-productos" id="catalogo" aria-label="Catálogo de productos">
+      <p id="catalogo-cargando">Cargando productos...</p>
+    </section>
+  </main>
+
+  <!-- RF2: Carrito de compras -->
+  <aside id="panel-carrito" class="panel-carrito oculto" aria-label="Carrito de compras">
+    <div class="panel-carrito-header">
+      <h2>Tu Carrito</h2>
+      <button id="btn-cerrar-carrito" class="btn-cerrar" aria-label="Cerrar carrito">✕</button>
+    </div>
+    <ul id="lista-carrito" class="lista-carrito"></ul>
+    <p id="carrito-vacio-mensaje" class="carrito-vacio">Tu carrito está vacío.</p>
+    <div class="panel-carrito-footer">
+      <p class="subtotal">Total: <span id="carrito-total">$0.00</span></p>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <p>&copy; 2026 Leños Rellenos — Hecho con tradición familiar.</p>
+  </footer>
+
+  <script src="js/disponibilidad.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/whatsapp.js"></script>
+</body>
+</html>
