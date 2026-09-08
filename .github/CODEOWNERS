@@ -9,14 +9,14 @@
 # (por ejemplo, un integrante encargado solo del backend).
 
 # Frontend: catálogo, carrito, integración con WhatsApp
-/frontend/                     @AntonioBM28
+/frontend/                     @AntonioBM28 @Manuel-Mata
 
 # Panel de Administración (dashboard del dueño del negocio)
-/frontend/pages/admin.html     @AntonioBM28
+/frontend/pages/admin.html     @AntonioBM28 @Manuel-Mata
 
 # Backend: API REST, modelos y lógica de negocio
-/backend/                      @AntonioBM28
+/backend/                      @AntonioBM28 @Manuel-Mata
 
 # Configuración crítica del repositorio
-/README.md                     @AntonioBM28
-/.github/                      @AntonioBM28
+/README.md                     @AntonioBM28 @Manuel-Mata
+/.github/                      @AntonioBM28 @Manuel-Mata
