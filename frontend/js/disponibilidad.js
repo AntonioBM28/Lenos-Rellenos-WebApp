@@ -56,7 +56,7 @@ async function cargarCatalogo() {
         <img src="${producto.imagen || 'img/placeholder.jpg'}" alt="${producto.nombre}" />
         <h3>${producto.nombre}</h3>
         <p class="precio">$${producto.precio.toFixed(2)}</p>
-        <button class="btn-agregar" data-id="${producto._id}">Agregar</button>
+        <button class="btn-agregar" data-id="${producto._id}" data-nombre="${producto.nombre}" data-precio="${producto.precio}">Agregar</button>
       `;
       contenedor.appendChild(tarjeta);
     });
