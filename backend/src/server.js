@@ -1,6 +1,9 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const conectarDB = require('./config/db');
+// Registrar todos los modelos antes de que las rutas hagan populate()
+require('./models/Categoria');
 const productosRoutes = require('./routes/productos.routes');
 
 const app = express();
