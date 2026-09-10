@@ -1,6 +1,6 @@
 # 🔥 Leños Rellenos - WebApp
 
-Aplicación web para la digitalización del proceso de venta del negocio familiar **Leños Rellenos**, desarrollada como parte del curso de *Desarrollo Web Integral* — Instrumento de Recuperación 2, **Caso 1**.
+Aplicación web para la digitalización del proceso de venta del negocio familiar **Leños Rellenos**, desarrollada como parte del curso de _Desarrollo Web Integral_ — Instrumento de Recuperación 2, **Caso 1**.
 
 El objetivo es permitir al negocio mostrar su catálogo de producto, recibir pedidos mediante un carrito de compras, canalizar la confirmación de compra por WhatsApp, y dar al dueño del negocio un panel de control simple para gestionar productos, stock y pedidos — sin complicar su forma actual de trabajar.
 
@@ -29,16 +29,39 @@ Se seleccionó **GitHub** como plataforma de alojamiento del repositorio, consid
 
 ### Configuración de seguridad y control de acceso
 
-| Parámetro | Configuración | Justificación |
-|---|---|---|
-| **Autenticación** | SSH (llave `ed25519`) | Se usa SSH en lugar de HTTPS porque el proyecto eventualmente manejará datos sensibles de clientes (nombres, direcciones, pedidos) a través del backend conectado a MongoDB Atlas; SSH evita introducir credenciales en cada operación de red y reduce el riesgo de exposición de contraseñas. |
-| **Rotación de llaves** | Cada 90 días, o inmediatamente si se sospecha compromiso | Al ser datos de clientes los que están en juego, se sigue una política de rotación periódica de llaves SSH como buena práctica de seguridad, minimizando la ventana de exposición si una llave llegara a filtrarse. |
-| **Protección de `main`** | Pull Request obligatorio + al menos 1 aprobación + status checks antes de mergear | La rama `main` representa el código en producción; forzar revisión por PR evita que un cambio no probado (por ejemplo, en el módulo de pedidos) llegue directo a producción. |
-| **CODEOWNERS** | Ver archivo [`CODEOWNERS`](./CODEOWNERS) | Define quién debe revisar y aprobar cambios según el módulo afectado (Frontend, Backend, Panel de Administración), evitando que se aprueben cambios críticos sin la revisión adecuada. |
+| Parámetro                | Configuración                                                                     | Justificación                                                                                                                                                                                                                                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Autenticación**        | SSH (llave `ed25519`)                                                             | Se usa SSH en lugar de HTTPS porque el proyecto eventualmente manejará datos sensibles de clientes (nombres, direcciones, pedidos) a través del backend conectado a MongoDB Atlas; SSH evita introducir credenciales en cada operación de red y reduce el riesgo de exposición de contraseñas. |
+| **Rotación de llaves**   | Cada 90 días, o inmediatamente si se sospecha compromiso                          | Al ser datos de clientes los que están en juego, se sigue una política de rotación periódica de llaves SSH como buena práctica de seguridad, minimizando la ventana de exposición si una llave llegara a filtrarse.                                                                            |
+| **Protección de `main`** | Pull Request obligatorio + al menos 1 aprobación + status checks antes de mergear | La rama `main` representa el código en producción; forzar revisión por PR evita que un cambio no probado (por ejemplo, en el módulo de pedidos) llegue directo a producción.                                                                                                                   |
+| **CODEOWNERS**           | Ver archivo [`CODEOWNERS`](./CODEOWNERS)                                          | Define quién debe revisar y aprobar cambios según el módulo afectado (Frontend, Backend, Panel de Administración), evitando que se aprueben cambios críticos sin la revisión adecuada.                                                                                                         |
 
 ---
 
 ## 🔀 Flujo de Trabajo del Control de Versiones
+
+### Flujo del negocio (proceso operativo del pedido)
+
+Antes de justificar el flujo de ramas, es importante mostrar el proceso
+**real** por el que pasa un pedido en Leños Rellenos — el mismo proceso
+que representa el tablero Kanban del proyecto (columnas Nuevo → En
+preparación → Enviado → Entregado):
+
+```mermaid
+flowchart LR
+    A["Cliente navega el catálogo<br/>y arma su pedido<br/>(RF1, RF2)"] --> B["Confirma el pedido<br/>vía WhatsApp<br/>(RF3, RF4)"]
+    B --> C["Nuevo<br/>El administrador recibe<br/>el pedido"]
+    C --> D["En preparación<br/>Valida disponibilidad<br/>y prepara (RF5)"]
+    D --> E["Enviado<br/>El dueño o su hijo<br/>salen a entregar"]
+    E --> F["Entregado<br/>Pedido confirmado<br/>con el cliente"]
+```
+
+Este flujo justifica por qué el tablero del proyecto usa estas 4
+columnas en lugar de un Kanban genérico (To Do / In Progress / Done):
+cada columna representa una etapa real de la logística descrita en el
+caso de estudio — validación manual del administrador, y entrega a
+cargo del dueño y su hijo, sin depender de servicios externos de
+delivery por tratarse de un negocio familiar con recursos limitados.
 
 ### Ritmo de entregas: MVP incremental
 
@@ -46,11 +69,11 @@ El desarrollo sigue un ritmo de **entregas incrementales tipo MVP**, alineado a 
 
 ### Comparación de flujos de trabajo
 
-| Flujo | Características | ¿Aplica a este caso? |
-|---|---|---|
-| **Git Flow** | Ramas `main`, `develop` y `feature/*` por funcionalidad; `main` solo recibe código ya probado en `develop`. Da control fino sobre qué se libera y cuándo. | ✅ **Elegido.** Encaja con el ritmo de entregas por fases (cada fase del MVP = una o más ramas `feature/*`) y permite mantener `main` siempre estable mientras se integra trabajo en `develop`. |
-| **GitHub Flow** | Solo `main` + ramas `feature/*` que se mergean directo a `main` vía PR. Pensado para despliegue continuo. | ❌ Descartado. Es más simple, pero no da un espacio de integración intermedio antes de tocar `main` — riesgoso considerando que el panel de administración maneja datos de pedidos y clientes. |
-| **Trunk-Based Development** | Todos commitean directo (o casi) sobre una única rama principal, con feature flags para ocultar trabajo incompleto. | ❌ Descartado. Requiere disciplina y tooling (feature flags, CI robusto) que no se justifica para un proyecto de una sola persona con recursos limitados; el riesgo de romper `main` es mayor. |
+| Flujo                       | Características                                                                                                                                           | ¿Aplica a este caso?                                                                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Git Flow**                | Ramas `main`, `develop` y `feature/*` por funcionalidad; `main` solo recibe código ya probado en `develop`. Da control fino sobre qué se libera y cuándo. | ✅ **Elegido.** Encaja con el ritmo de entregas por fases (cada fase del MVP = una o más ramas `feature/*`) y permite mantener `main` siempre estable mientras se integra trabajo en `develop`. |
+| **GitHub Flow**             | Solo `main` + ramas `feature/*` que se mergean directo a `main` vía PR. Pensado para despliegue continuo.                                                 | ❌ Descartado. Es más simple, pero no da un espacio de integración intermedio antes de tocar `main` — riesgoso considerando que el panel de administración maneja datos de pedidos y clientes.  |
+| **Trunk-Based Development** | Todos commitean directo (o casi) sobre una única rama principal, con feature flags para ocultar trabajo incompleto.                                       | ❌ Descartado. Requiere disciplina y tooling (feature flags, CI robusto) que no se justifica para un proyecto de una sola persona con recursos limitados; el riesgo de romper `main` es mayor.  |
 
 ### Estrategia de ramas y protección diferenciada
 
@@ -113,15 +136,15 @@ El modelo de datos refleja las entidades identificadas en el caso de estudio:
 
 ## 📋 Requerimientos Funcionales (MVP)
 
-| ID | Requerimiento |
-|---|---|
-| RF1 | Visualización del menú completo de productos |
-| RF2 | Carrito de compras |
-| RF3 | Botón de compra directa que redirige a WhatsApp |
-| RF4 | Generación automática del mensaje de pedido |
-| RF5 | Visualización de disponibilidad (stock) |
+| ID  | Requerimiento                                      |
+| --- | -------------------------------------------------- |
+| RF1 | Visualización del menú completo de productos       |
+| RF2 | Carrito de compras                                 |
+| RF3 | Botón de compra directa que redirige a WhatsApp    |
+| RF4 | Generación automática del mensaje de pedido        |
+| RF5 | Visualización de disponibilidad (stock)            |
 | RF6 | Indicador de horario del negocio (abierto/cerrado) |
-| RF7 | Interfaz sencilla, rápida y fácil de usar |
+| RF7 | Interfaz sencilla, rápida y fácil de usar          |
 
 **Requerimientos no funcionales**: interfaz responsiva (RNF1), carga del menú en menos de 3 segundos (RNF2), interfaz intuitiva (RNF3), persistencia del carrito al recargar (RNF4), y coherencia visual con la identidad del negocio (RNF5).
 
